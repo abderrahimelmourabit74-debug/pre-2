@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES Encryption & Decryption System</title>
+    <link rel="stylesheet" href="2.css">
+    <!-- CryptoJS Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 AES Encryption & Decryption System</h1>
+            <p class="subtitle">Encrypt / Decrypt text using AES-128, AES-192, or AES-256</p>
+        </header>
+
+        <main>
+            <!-- Operation Selection -->
+            <section class="card">
+                <h2>1. Select Operation</h2>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="operation" value="encrypt" checked>
+                        <span>🔒 Encrypt</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="operation" value="decrypt">
+                        <span>🔓 Decrypt</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Mode & Key Length -->
+            <section class="card">
+                <h2>2. Configuration</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="mode">Mode of Operation</label>
+                        <select id="mode">
+                            <option value="ECB">ECB (Electronic Codebook)</option>
+                            <option value="CBC" selected>CBC (Cipher Block Chaining)</option>
+                            <option value="CFB">CFB (Cipher Feedback)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keyLength">Key Length</label>
+                        <select id="keyLength">
+                            <option value="128">AES-128 bits</option>
+                            <option value="192">AES-192 bits</option>
+                            <option value="256" selected>AES-256 bits</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Input Area -->
+            <section class="card">
+                <h2>3. Input</h2>
+
+                <div class="form-group">
+                    <label for="secretKey">Secret Key</label>
+                    <input type="password" id="secretKey" placeholder="Enter your secret key (required)">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputText">Plaintext / Ciphertext</label>
+                    <textarea id="inputText" rows="6" placeholder="Enter the text to encrypt or paste ciphertext to decrypt..."></textarea>
+                </div>
+
+                <div class="form-group" id="ivGroup">
+                    <label for="ivInput">IV (Initialization Vector) - for CBC/CFB</label>
+                    <input type="text" id="ivInput" placeholder="Auto-generated for encryption, paste IV for decryption">
+                    <small>Leave empty to auto-generate when encrypting</small>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="card actions">
+                <h2>4. Actions</h2>
+                <div class="button-grid">
+                    <button id="processBtn" class="btn btn-primary">▶ Process</button>
+                    <button id="saveBtn" class="btn btn-success">💾 Save to .txt file</button>
+                    <button id="loadBtn" class="btn btn-info">📂 Load from .txt file</button>
+                    <button id="clearBtn" class="btn btn-secondary">🗑 Clear</button>
+                </div>
+                <input type="file" id="fileInput" accept=".txt" hidden>
+            </section>
+
+            <!-- Output -->
+            <section class="card">
+                <h2>5. Result</h2>
+                <div class="form-group">
+                    <label for="outputText">Output</label>
+                    <textarea id="outputText" rows="6" readonly placeholder="Result will appear here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="metaInfo">Metadata</label>
+                    <input type="text" id="metaInfo" readonly placeholder="Mode, key length, IV info...">
+                </div>
+            </section>
+
+            <!-- Explanation -->
+            <section class="card explanation">
+                <h2>📚 How It Works</h2>
+                <details>
+                    <summary>What is AES?</summary>
+                    <p>AES (Advanced Encryption Standard) is a symmetric block cipher that operates on 128-bit blocks. The number of rounds depends on key length: 10 rounds (AES-128), 12 rounds (AES-192), 14 rounds (AES-256).</p>
+                </details>
+                <details>
+                    <summary>Key Lengths</summary>
+                    <p><b>AES-128</b>: 10 rounds, fastest, still secure.<br>
+                       <b>AES-192</b>: 12 rounds, balanced.<br>
+                       <b>AES-256</b>: 14 rounds, strongest — recommended for high security.</p>
+                </details>
+                <details>
+                    <summary>Modes of Operation</summary>
+                    <p><b>ECB</b>: Each block encrypted independently — insecure for repeated patterns.<br>
+                       <b>CBC</b>: Each block XORed with previous ciphertext (needs IV) — secure.<br>
+                       <b>CFB</b>: Turns block cipher into stream cipher (needs IV) — good for streaming.</p>
+                </details>
+                <details>
+                    <summary>Key Handling</summary>
+                    <p>Your password is transformed to a key of the selected length using <code>PBKDF2</code>-like stretching via CryptoJS's <code>enc.Utf8.parse</code> + padding. If the password is shorter than required, it is repeated/padded; if longer, it is truncated consistently so encryption and decryption always match.</p>
+                </details>
+            </section>
+        </main>
+
+        <footer>
+            <p>AES Encryption & Decryption System — Built with HTML, CSS & JavaScript (CryptoJS)</p>
+        </footer>
+    </div>
+
+    <script src="2.js"></script>
+</body>
+</html>
